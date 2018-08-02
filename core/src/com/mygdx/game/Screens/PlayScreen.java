@@ -25,6 +25,7 @@ import com.mygdx.game.Mariogame;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Sprites.Mario;
 import com.mygdx.game.Tools.B2WorldCreator;
+import com.mygdx.game.Tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
     private Mariogame game;
