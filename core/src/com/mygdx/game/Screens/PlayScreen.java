@@ -64,6 +64,8 @@ public class PlayScreen implements Screen {
 
         player = new Mario(world, this);
 
+        world.setContactListener(new WorldContactListener());
+
     }
 
     public TextureAtlas getAtlas(){
