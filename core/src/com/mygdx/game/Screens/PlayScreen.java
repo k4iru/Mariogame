@@ -29,42 +29,54 @@ import com.mygdx.game.Tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
     private Mariogame game;
+
+    // use libgdx texture packer to create texture atlas'
     private TextureAtlas atlas;
+
+    // 2d game cam
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     Hud hud;
 
-    //map
+    //map variables
     private TmxMapLoader maploader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
-    //box2d
+    //box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
 
-    //player
+    //player object
     private Mario player;
 
     public PlayScreen(Mariogame game){
+
+        // mario and enemy sprites
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
         this.game = game;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(Mariogame.V_WIDTH / Mariogame.PPM, Mariogame.V_HEIGHT / Mariogame.PPM, gamecam);
         hud = new Hud(game.batch);
 
+        // load the map, sets camera position to be centered on player on the x axis
         maploader = new TmxMapLoader();
         map = maploader.load("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / Mariogame.PPM);
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
+        // box2d world, can set gravity settings etc here
         world = new World(new Vector2(0,-10), true);
+        // box2d debugger
         b2dr = new Box2DDebugRenderer();
 
+        //creates the world with loaded map
         new B2WorldCreator(world, map);
 
+        // creates the player object
         player = new Mario(world, this);
 
+        // listen for collisions between fixtures and sprites
         world.setContactListener(new WorldContactListener());
 
     }
@@ -79,6 +91,7 @@ public class PlayScreen implements Screen {
 
     public void handleInput(float dt){
 
+        // desktop controls
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP))
             player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
@@ -88,10 +101,17 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt){
+        // update camera position and handle input
         handleInput(dt);
+
+        //performs a time step, calculates unit collision
         world.step(1/60f, 6, 2);
 
+
+        // updates player state
         player.update(dt);
+
+        // centers camera on player
         gamecam.position.x = player.b2body.getPosition().x;
         gamecam.update();
         renderer.setView(gamecam);
@@ -99,27 +119,34 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
+        // update camera, states, input
         update(delta);
+
+        // clears the screen with black
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // renders the map
         renderer.render();
         b2dr.render(world, gamecam.combined);
 
+        // combines the sprite batches and draws them to the scene
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
         game.batch.end();
 
+        // draws the hud on top of the current scene
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-
     }
 
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width,height);
 
+        // sets width and height
+        gamePort.update(width,height);
     }
 
     @Override
@@ -139,6 +166,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+
+        // free up resources
         map.dispose();
         renderer.dispose();
         world.dispose();
