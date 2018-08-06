@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Mariogame;
+import com.mygdx.game.Scenes.Hud;
 
 public class Brick extends InteractiveTileObject{
     public Brick(World world, TiledMap map, Rectangle bounds){
@@ -25,6 +26,7 @@ public class Brick extends InteractiveTileObject{
 
         //sets the brick tile to null, so that it disappears
         getCell().setTile(null);
+        Hud.addScore(200);
 
     }
 }

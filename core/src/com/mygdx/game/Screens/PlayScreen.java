@@ -104,6 +104,9 @@ public class PlayScreen implements Screen {
         // update camera position and handle input
         handleInput(dt);
 
+        // updates score and time
+        hud.update(dt);
+
         //performs a time step, calculates unit collision
         world.step(1/60f, 6, 2);
 
