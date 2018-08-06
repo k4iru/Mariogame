@@ -1,6 +1,7 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
@@ -27,6 +28,7 @@ public class Brick extends InteractiveTileObject{
         //sets the brick tile to null, so that it disappears
         getCell().setTile(null);
         Hud.addScore(200);
+        Mariogame.manager.get("audio/sounds/breakblock.wav", Sound.class).play();
 
     }
 }

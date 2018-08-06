@@ -3,6 +3,7 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -47,8 +48,10 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
 
-    //player object
+    //sprites
     private Mario player;
+
+    private Music music;
 
     public PlayScreen(Mariogame game){
 
@@ -78,6 +81,10 @@ public class PlayScreen implements Screen {
 
         // listen for collisions between fixtures and sprites
         world.setContactListener(new WorldContactListener());
+
+        music = Mariogame.manager.get("audio/music/mario_music.ogg", Music.class);
+        music.setLooping(true);
+        music.play();
 
     }
 
